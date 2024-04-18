@@ -13,7 +13,7 @@ namespace Labb2__Trådar_Asynkro
         public int Distance { get; set; }
         public int Speed { get; set; }
         public bool Finish { get; set; }
-        
+        public event EventHandler FinishedRace;
 
         public Car(string name, int speed)
         {
@@ -25,7 +25,7 @@ namespace Labb2__Trådar_Asynkro
 
         public void DrivingProblems()
         {
-            while(!Finish && Distance < 1000)
+            while (!Finish && Distance < 1000)
             {
                 Thread.Sleep(1000);
                 Random random = new Random();
@@ -41,31 +41,33 @@ namespace Labb2__Trådar_Asynkro
                     Console.WriteLine($"{Name} has a flat tier! You need to change tiers! will take 20 seconds.");
                     Thread.Sleep(20000);
                 }
-                else if(issue <= 8)
+                else if (issue <= 8)
                 {
                     Console.WriteLine($"A bird hit the window of car {Name}, need to clean it! Takes 10 seconds.");
                     Thread.Sleep(10000);
                 }
-                else if(issue <= 10)
+                else if (issue <= 10)
                 {
                     Console.WriteLine($"There is an issue with the engine on {Name} car. Slowing down with 1km/h.");
                     Speed--;
                 }
-
                 Distance += Speed;
-                
+
+
             }
 
-            if(Distance >= 1000)
+            if (Distance >= 1000)
             {
-                Finished();
+                Finish = true;
+                Console.WriteLine($"{Name} has finished the race.");
+                OnFinishedRace(EventArgs.Empty);
+                
             }
         }
 
-        public void Finished()
+        protected virtual void OnFinishedRace(EventArgs e)
         {
-            Finish = true;
-            Console.WriteLine($"{Name} finished the race!!");
+            FinishedRace?.Invoke(this, e);
         }
     }
 }

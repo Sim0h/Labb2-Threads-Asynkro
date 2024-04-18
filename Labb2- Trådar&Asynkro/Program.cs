@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        private static readonly Mutex mutex = new Mutex();
+        
         static void Main(string[] args)
         {
             Car car1 = new Car("Simon", 120);
